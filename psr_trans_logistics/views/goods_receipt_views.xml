@@ -4,7 +4,7 @@
         <field name="name">psr.goods.receipt.tree</field>
         <field name="model">psr.goods.receipt</field>
         <field name="arch" type="xml">
-            <list string="Goods Receipts" decoration-info="state == 'booked'"
+            <list string="Goods Receipt" decoration-info="state == 'booked'"
                   decoration-success="state == 'delivered'" decoration-muted="state == 'cancelled'">
                 <field name="name"/>
                 <field name="booking_location"/>
