@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend the standard Fleet vehicle form with a Spare Parts tab -->
+    <record id="view_fleet_vehicle_form_inherit_psr" model="ir.ui.view">
+        <field name="name">fleet.vehicle.form.inherit.psr</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Spare Parts (GMS)" name="psr_spare_parts">
+                    <field name="part_usage_ids">
+                        <list editable="bottom">
+                            <field name="date"/>
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                            <field name="unit_cost"/>
+                            <field name="total_cost"/>
+                            <field name="service_log_id"/>
+                            <field name="stock_move_id" readonly="1"/>
+                            <button name="action_consume_from_stock" string="Deduct from Stock" type="object"
+                                    icon="fa-cubes" invisible="stock_move_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_psr_vehicle_part_usage_tree" model="ir.ui.view">
+        <field name="name">psr.vehicle.part.usage.tree</field>
+        <field name="model">psr.vehicle.part.usage</field>
+        <field name="arch" type="xml">
+            <list string="Spare Parts Usage">
+                <field name="vehicle_id"/>
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="total_cost"/>
+                <field name="service_log_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_psr_vehicle_part_usage" model="ir.actions.act_window">
+        <field name="name">Garage - Spare Parts Usage</field>
+        <field name="res_model">psr.vehicle.part.usage</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Log spare parts consumed against a vehicle</p>
+        </field>
+    </record>
+
+    <!-- Shortcut to standard Fleet menus for GMS (vehicles, services, contracts) -->
+    <record id="action_psr_fleet_vehicles_shortcut" model="ir.actions.act_window">
+        <field name="name">Vehicles (Garage Management)</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">list,form,kanban</field>
+    </record>
+</odoo>

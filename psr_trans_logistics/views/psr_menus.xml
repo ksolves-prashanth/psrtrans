@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_psr_root" name="Transport Operations" sequence="15"
+              web_icon="fleet,static/description/icon.png"/>
+
+    <menuitem id="menu_psr_goods_receipt" name="Goods Receipt" parent="menu_psr_root"
+              action="action_psr_goods_receipt" sequence="10"/>
+
+    <menuitem id="menu_psr_trip_sheet" name="Trip Sheets" parent="menu_psr_root"
+              action="action_psr_trip_sheet" sequence="20"/>
+
+    <menuitem id="menu_psr_delivery_note" name="Delivery / Unloading" parent="menu_psr_root"
+              action="action_psr_delivery_note" sequence="30"/>
+
+    <menuitem id="menu_psr_gms_root" name="Garage Management (GMS)" parent="menu_psr_root" sequence="40"/>
+    <menuitem id="menu_psr_gms_vehicles" name="Vehicles" parent="menu_psr_gms_root"
+              action="action_psr_fleet_vehicles_shortcut" sequence="10"/>
+    <menuitem id="menu_psr_gms_part_usage" name="Spare Parts Usage" parent="menu_psr_gms_root"
+              action="action_psr_vehicle_part_usage" sequence="20"/>
+
+    <menuitem id="menu_psr_config" name="Configuration" parent="menu_psr_root" sequence="90"
+              groups="group_psr_manager"/>
+</odoo>

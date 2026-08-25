@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_psr_goods_receipt_user,psr.goods.receipt.user,model_psr_goods_receipt,group_psr_user,1,1,1,0
+access_psr_goods_receipt_manager,psr.goods.receipt.manager,model_psr_goods_receipt,group_psr_manager,1,1,1,1
+access_psr_goods_receipt_line_user,psr.goods.receipt.line.user,model_psr_goods_receipt_line,group_psr_user,1,1,1,1
+access_psr_trip_sheet_user,psr.trip.sheet.user,model_psr_trip_sheet,group_psr_user,1,1,1,0
+access_psr_trip_sheet_manager,psr.trip.sheet.manager,model_psr_trip_sheet,group_psr_manager,1,1,1,1
+access_psr_delivery_note_user,psr.delivery.note.user,model_psr_delivery_note,group_psr_user,1,1,1,0
+access_psr_delivery_note_manager,psr.delivery.note.manager,model_psr_delivery_note,group_psr_manager,1,1,1,1
+access_psr_vehicle_part_usage_user,psr.vehicle.part.usage.user,model_psr_vehicle_part_usage,group_psr_user,1,1,1,0
+access_psr_vehicle_part_usage_manager,psr.vehicle.part.usage.manager,model_psr_vehicle_part_usage,group_psr_manager,1,1,1,1

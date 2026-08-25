@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_psr_goods_receipt_tree" model="ir.ui.view">
+        <field name="name">psr.goods.receipt.tree</field>
+        <field name="model">psr.goods.receipt</field>
+        <field name="arch" type="xml">
+            <list string="Goods Receipts" decoration-info="state == 'booked'"
+                  decoration-success="state == 'delivered'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="booking_location"/>
+                <field name="dispatch_date"/>
+                <field name="consignor_id"/>
+                <field name="consignee_id"/>
+                <field name="package_count"/>
+                <field name="total_value"/>
+                <field name="trip_sheet_id"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_psr_goods_receipt_form" model="ir.ui.view">
+        <field name="name">psr.goods.receipt.form</field>
+        <field name="model">psr.goods.receipt</field>
+        <field name="arch" type="xml">
+            <form string="Goods Receipt">
+                <header>
+                    <button name="action_confirm_booking" string="Confirm Booking" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_mark_in_transit" string="Mark In Transit" type="object"
+                            invisible="state != 'booked'"/>
+                    <button name="action_mark_delivered" string="Mark Delivered" type="object"
+                            invisible="state != 'in_transit'"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('delivered', 'cancelled')"/>
+                    <button name="action_print_goods_receipt"
+                            type="object"
+                            string="Print Goods Receipt"
+                            class="oe_highlight"
+                            icon="fa-print"
+                            invisible="state in ('draft', 'cancelled', 'booked', 'in_transit')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,booked,in_transit,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Booking">
+                            <field name="booking_location"/>
+                            <field name="dispatch_date"/>
+                            <field name="is_partial_booking"/>
+                            <field name="parent_gr_id" invisible="not is_partial_booking"/>
+                        </group>
+                        <group string="Parties">
+                            <field name="consignor_id"/>
+                            <field name="consignee_id"/>
+                            <field name="delivery_address_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="E-Way Bill">
+                            <field name="eway_bill_number"/>
+                            <field name="eway_bill_date"/>
+                            <field name="package_count"/>
+                        </group>
+                        <group string="Charges">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="gr_charges"/>
+                            <field name="final_delivery_charges"/>
+                            <field name="goods_value"/>
+                            <field name="volumetric_weight_total"/>
+                            <field name="total_value"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Product Lines">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="uom_id"/>
+                                    <field name="quantity"/>
+                                    <field name="rate"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="delivery_address_id"/>
+                                    <field name="length_cm"/>
+                                    <field name="width_cm"/>
+                                    <field name="height_cm"/>
+                                    <field name="actual_weight"/>
+                                    <field name="volumetric_weight"/>
+                                    <field name="chargeable_weight"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Invoice Details">
+                            <group>
+                                <field name="invoice_number"/>
+                                <field name="product_type"/>
+                                <field name="invoice_value"/>
+                                <field name="payment_terms"/>
+                                <field name="invoice_id"/>
+                            </group>
+                        </page>
+                        <page string="AI-Assisted Entry">
+                            <group>
+                                <field name="source_document" filename="source_document_filename"/>
+                                <field name="source_document_filename" invisible="1"/>
+                            </group>
+                            <button name="action_ai_extract_details" string="Extract Details with AI"
+                                    type="object" class="btn-secondary" icon="fa-magic"
+                                    help="Auto-fill e-way bill / invoice fields from the attached scan"/>
+                        </page>
+                        <page string="Trip / Consolidation">
+                            <group>
+                                <field name="trip_sheet_id"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_psr_goods_receipt_search" model="ir.ui.view">
+        <field name="name">psr.goods.receipt.search</field>
+        <field name="model">psr.goods.receipt</field>
+        <field name="arch" type="xml">
+            <search string="Search Goods Receipts">
+                <field name="name"/>
+                <field name="consignor_id"/>
+                <field name="consignee_id"/>
+                <field name="booking_location"/>
+                <filter string="Draft" name="filter_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Booked" name="filter_booked" domain="[('state', '=', 'booked')]"/>
+                <filter string="In Transit" name="filter_in_transit" domain="[('state', '=', 'in_transit')]"/>
+                <filter string="Delivered" name="filter_delivered" domain="[('state', '=', 'delivered')]"/>
+                <!--                <group expand="0" string="Group By">-->
+                <!--                    <filter string="Booking Location" name="group_location" context="{'group_by': 'booking_location'}"/>-->
+                <!--                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>-->
+                <!--                </group>-->
+            </search>
+        </field>
+    </record>
+
+    <record id="action_psr_goods_receipt" model="ir.actions.act_window">
+        <field name="name">Goods Receipts</field>
+        <field name="res_model">psr.goods.receipt</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_psr_goods_receipt_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first Goods Receipt (GR)</p>
+        </field>
+    </record>
+</odoo>

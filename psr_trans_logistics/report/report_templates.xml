@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ================================================================
+         MAIN REPORT TEMPLATE
+         Wraps everything in web.basic_layout (as requested), then
+         loops over docs and prints Consignor / Driver / Consignee
+         copies, one page per LR, three copies stacked on that page.
+         ================================================================ -->
+    <template id="report_psr_goods_receipt">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <t t-set="doc" t-value="doc"/>
+
+                    <!-- Shared CSS for all three copies, defined once -->
+                    <style>
+                        .psr-lr-page {
+                            font-family: Arial, Helvetica, sans-serif;
+                            font-size: 10px;
+                            color: #000;
+                        }
+                        .psr-copy {
+                            border: 1.5px solid #000;
+                            margin-bottom: 6px;
+                            page-break-inside: avoid;
+                        }
+                        .psr-copy table.psr-info-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .psr-copy table.psr-info-table td {
+                            border: 1px solid #000;
+                            padding: 2px 4px;
+                            vertical-align: top;
+                            font-size: 9.5px;
+                        }
+                        .psr-label {
+                            font-weight: bold;
+                            white-space: nowrap;
+                        }
+                        .psr-header-row td {
+                            font-size: 9.5px;
+                        }
+                        .psr-goods-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                        }
+                        .psr-goods-table td,
+                        .psr-goods-table th {
+                            border: 1px solid #000;
+                            padding: 2px 4px;
+                            font-size: 9.5px;
+                        }
+                        .psr-right-block {
+                            text-align: center;
+                            vertical-align: middle;
+                        }
+                        .psr-logo-img {
+                            max-height: 55px;
+                            max-width: 100%;
+                        }
+                        .psr-copy-title {
+                            font-weight: bold;
+                            text-align: center;
+                            font-size: 10.5px;
+                        }
+                        .psr-no-border-bottom {
+                            border-bottom: none !important;
+                        }
+                        .psr-no-border-top {
+                            border-top: none !important;
+                        }
+                    </style>
+
+                    <div class="psr-lr-page">
+                        <!-- Copy 1: Consignor -->
+                        <t t-call="psr_trans_logistics.psr_goods_receipt_copy">
+                            <t t-set="doc" t-value="doc"/>
+                            <t t-set="copy_name" t-value="'CONSIGNOR\'S COPY'"/>
+                        </t>
+
+                        <!-- Copy 2: Driver -->
+                        <t t-call="psr_trans_logistics.psr_goods_receipt_copy">
+                            <t t-set="doc" t-value="doc"/>
+                            <t t-set="copy_name" t-value="'DRIVER\'S COPY'"/>
+                        </t>
+
+                        <!-- Copy 3: Consignee -->
+                        <t t-call="psr_trans_logistics.psr_goods_receipt_copy">
+                            <t t-set="doc" t-value="doc"/>
+                            <t t-set="copy_name" t-value="'CONSIGNEE\'S COPY'"/>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- ================================================================
+         REUSABLE SINGLE-COPY TEMPLATE
+         Called 3x from the main template above, only "copy_name" changes.
+         ================================================================ -->
+    <template id="psr_goods_receipt_copy">
+        <div class="psr-copy">
+            <table class="psr-info-table">
+                <!-- Row 1: Email / GST / Website -->
+                <tr class="psr-header-row">
+                    <td style="width:8%;" class="psr-label">Email Id :</td>
+                    <td style="width:32%;">
+                        <!-- Replace with actual field if different from company email -->
+                        <t t-out="doc.company_id.email"/>
+                    </td>
+                    <td style="width:10%;" class="psr-label">GST No:</td>
+                    <td style="width:20%;">
+                        <!-- Assumes GSTIN is stored on res.company.vat -->
+                        <t t-out="doc.company_id.vat"/>
+                    </td>
+                    <td style="width:30%;">
+                        Website : <t t-out="doc.company_id.website"/>
+                    </td>
+                </tr>
+
+                <!-- Row 2: Head Office / LR No -->
+                <tr class="psr-header-row">
+                    <td class="psr-label">Head Office :</td>
+                    <td colspan="3">
+                        <!-- Composed from company address fields -->
+                        <t t-out="doc.company_id.street"/>,
+                        <t t-out="doc.company_id.city"/>,
+                        <t t-out="doc.company_id.state_id.name"/>,
+                        <t t-out="doc.company_id.zip"/>
+                    </td>
+                    <td>
+                        <span class="psr-label">LR No.: </span>
+                        <t t-out="doc.name"/>
+                    </td>
+                </tr>
+
+                <!-- Row 3: Mobile / Date -->
+                <tr class="psr-header-row">
+                    <td class="psr-label">Mobile No.:</td>
+                    <td colspan="3">
+                        <!-- Replace with actual field: doc.company_id.mobile / phone,
+                             or a dedicated field if multiple numbers are stored -->
+                        <t t-out="doc.company_id.phone"/>
+                    </td>
+                    <td>
+                        <span class="psr-label">Date: </span>
+<!--                        <t t-out="doc.date" t-options="{'widget': 'date'}"/>-->
+                    </td>
+                </tr>
+
+                <!-- Row 4: Delivery Branch / From -->
+                <tr class="psr-header-row">
+                    <td class="psr-label">Delivery Branch :</td>
+                    <td colspan="3">
+                        <t t-out="doc.booking_location"/>
+                    </td>
+                    <td>
+                        <span class="psr-label">From: </span>
+<!--                        <t t-out="doc.source_location"/>-->
+                    </td>
+                </tr>
+
+                <!-- Row 5: Consignor / GST / To -->
+                <tr class="psr-header-row">
+                    <td class="psr-label">Consignor:</td>
+                    <td>
+                        <t t-out="doc.consignor_id.name"/>
+                    </td>
+                    <td class="psr-label">GST No:</td>
+                    <td>
+                        <!-- Replace with actual field if GST is stored separately -->
+                        <t t-out="doc.consignor_id.vat"/>
+                    </td>
+                    <td>
+                        <span class="psr-label">To.: </span>
+<!--                        <t t-out="doc.destination_location"/>-->
+                    </td>
+                </tr>
+
+                <!-- Row 6: Consignee / GST / Payment Mode -->
+                <tr class="psr-header-row">
+                    <td class="psr-label">Consignee:</td>
+                    <td>
+                        <t t-out="doc.consignee_id.name"/>
+                    </td>
+                    <td class="psr-label">GST No:</td>
+                    <td>
+                        <t t-out="doc.consignee_id.vat"/>
+                    </td>
+                    <td>
+                        <span class="psr-label">PaymentMode </span>
+<!--                        <t t-out="doc.payment_mode"/>-->
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ============================================================
+                 GOODS TABLE + RIGHT SIDE (logo / "For PSR Transport Logistics")
+                 ============================================================ -->
+            <table class="psr-goods-table">
+                <tr>
+                    <th style="width:10%;">Packages</th>
+                    <th style="width:34%;">escription (Said To Contain)</th>
+                    <th style="width:12%;">Actual Weight</th>
+                    <th style="width:10%;">Rate</th>
+                    <th style="width:12%;">Grand Total</th>
+                    <th rowspan="4" style="width:22%;" class="psr-right-block">
+                        <!-- Company logo -->
+                        <img t-if="doc.company_id.logo"
+                             t-att-src="image_data_uri(doc.company_id.logo)"
+                             class="psr-logo-img"/>
+                        <div style="font-weight:bold; margin-top:4px;">
+                            For PSR Transport Logistics
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <t t-out="doc.package_count"/>
+                    </td>
+                    <td>
+<!--                        <t t-out="doc.package_description"/>-->
+                    </td>
+                    <td>
+<!--                        <t t-out="doc.actual_weight"/>-->
+                    </td>
+                    <td>
+                        <!-- Rate left blank on source document -->
+<!--                        <t t-out="doc.rate"/>-->
+                    </td>
+                    <td>
+<!--                        <t t-out="doc.grand_total" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>-->
+                    </td>
+                </tr>
+                <tr>
+                    <td/>
+                    <td class="psr-label">Charged Weight</td>
+                    <td colspan="3">
+<!--                        <t t-out="doc.charged_weight"/>-->
+                    </td>
+                </tr>
+                <tr>
+                    <td/>
+                    <td class="psr-label">Goods Booked At</td>
+                    <td colspan="3">
+<!--                        <t t-out="doc.goods_booked_at"/>-->
+                    </td>
+                </tr>
+            </table>
+
+            <!-- ============================================================
+                 BOTTOM INFO: E-Way Bill / P.Mark / Invoice / Delivery / Remark
+                 ============================================================ -->
+            <table class="psr-info-table">
+                <tr>
+                    <td style="width:10%;" class="psr-label">EwayBill No. :</td>
+                    <td style="width:35%;">
+                        <t t-out="doc.eway_bill_number"/>
+                    </td>
+                    <td style="width:8%;" class="psr-label">Date :</td>
+                    <td style="width:47%;">
+                        <t t-out="doc.eway_bill_date" t-options="{'widget': 'date'}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="psr-label">P.Mark :</td>
+                    <td>
+<!--                        <t t-out="doc.p_mark"/>-->
+                    </td>
+                    <td class="psr-label">Delivery At :</td>
+                    <td>
+<!--                        <t t-out="doc.delivery_at"/>-->
+                    </td>
+                </tr>
+                <tr>
+                    <td class="psr-label">Invoice No :</td>
+                    <td>
+                        <t t-out="doc.invoice_number"/>
+                    </td>
+                    <td class="psr-label">Value :</td>
+                    <td>
+                        <t t-out="doc.invoice_value" t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="psr-label">Remark:</td>
+                    <td colspan="2">
+<!--                        <t t-out="doc.remark"/>-->
+                    </td>
+                    <!-- ================================================
+                         FOOTER TITLE — the only thing that changes
+                         between the three copies (copy_name passed in)
+                         ================================================ -->
+                    <td class="psr-copy-title">
+                        <t t-out="copy_name"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+</odoo>

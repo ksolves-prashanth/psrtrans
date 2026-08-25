@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_psr_delivery_note_tree" model="ir.ui.view">
+        <field name="name">psr.delivery.note.tree</field>
+        <field name="model">psr.delivery.note</field>
+        <field name="arch" type="xml">
+            <list string="Delivery / Unloading Notes">
+                <field name="name"/>
+                <field name="gr_id"/>
+                <field name="consignee_id"/>
+                <field name="unloading_location"/>
+                <field name="unloading_date"/>
+                <field name="total_unloading_charges"/>
+                <field name="payment_state" widget="badge"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_psr_delivery_note_form" model="ir.ui.view">
+        <field name="name">psr.delivery.note.form</field>
+        <field name="model">psr.delivery.note</field>
+        <field name="arch" type="xml">
+            <form string="Delivery / Unloading Note">
+                <header>
+                    <button name="action_confirm_unloading" string="Confirm Unloading" type="object"
+                            class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_close" string="Close" type="object"
+                            invisible="state != 'unloaded'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,unloaded,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Reference">
+                            <field name="gr_id"/>
+                            <field name="trip_sheet_id" readonly="1"/>
+                            <field name="consignee_id" readonly="1"/>
+                        </group>
+                        <group string="Unloading">
+                            <field name="unloading_location"/>
+                            <field name="unloading_date"/>
+                            <field name="received_by"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Additional Charges">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="fuel_charges"/>
+                            <field name="local_delivery_charges"/>
+                            <field name="total_unloading_charges"/>
+                        </group>
+                        <group string="Money Receipt">
+                            <field name="money_receipt_number"/>
+                            <field name="amount_received"/>
+                            <field name="payment_state" widget="badge"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_psr_delivery_note" model="ir.actions.act_window">
+        <field name="name">Delivery / Unloading Notes</field>
+        <field name="res_model">psr.delivery.note</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first Delivery / Unloading Note</p>
+        </field>
+    </record>
+</odoo>

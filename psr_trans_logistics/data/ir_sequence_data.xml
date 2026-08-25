@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="seq_psr_goods_receipt" model="ir.sequence">
+        <field name="name">Goods Receipt</field>
+        <field name="code">psr.goods.receipt</field>
+        <field name="prefix">GR/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_psr_trip_sheet" model="ir.sequence">
+        <field name="name">Trip Sheet</field>
+        <field name="code">psr.trip.sheet</field>
+        <field name="prefix">TS/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_psr_delivery_note" model="ir.sequence">
+        <field name="name">Delivery / Unloading Note</field>
+        <field name="code">psr.delivery.note</field>
+        <field name="prefix">DN/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

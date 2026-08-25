@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- Partners across the client's operating stations -->
+    <record id="demo_partner_consignor_delhi" model="res.partner">
+        <field name="name">Northline Pharma Distributors (Delhi)</field>
+        <field name="city">Delhi</field>
+        <field name="is_company">True</field>
+    </record>
+    <record id="demo_partner_consignee_gujarat" model="res.partner">
+        <field name="name">Saurashtra Traders (Gujarat)</field>
+        <field name="city">Rajkot</field>
+        <field name="is_company">True</field>
+    </record>
+    <record id="demo_partner_consignee_bihar" model="res.partner">
+        <field name="name">Ganga Retail Hub (Bihar)</field>
+        <field name="city">Patna</field>
+        <field name="is_company">True</field>
+    </record>
+
+    <!-- Products -->
+    <record id="demo_product_carton_a" model="product.product">
+        <field name="name">General Cargo - Carton (Type A)</field>
+        <field name="detailed_type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+    <record id="demo_product_spare_tyre" model="product.product">
+        <field name="name">Truck Tyre - Spare Part</field>
+        <field name="detailed_type">consu</field>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+    </record>
+
+    <!-- Fleet - vehicle brand/model/vehicle for GMS + Trip Sheet demo -->
+    <record id="demo_fleet_brand" model="fleet.vehicle.model.brand">
+        <field name="name">Tata Motors</field>
+    </record>
+    <record id="demo_fleet_model" model="fleet.vehicle.model">
+        <field name="name">Tata 1613 Truck</field>
+        <field name="brand_id" ref="demo_fleet_brand"/>
+        <field name="vehicle_type">truck</field>
+    </record>
+    <record id="demo_fleet_vehicle" model="fleet.vehicle">
+        <field name="model_id" ref="demo_fleet_model"/>
+        <field name="license_plate">DL-01-AB-1234</field>
+    </record>
+
+    <!-- Sample Goods Receipt -->
+    <record id="demo_gr_1" model="psr.goods.receipt">
+        <field name="booking_location">Delhi</field>
+        <field name="consignor_id" ref="demo_partner_consignor_delhi"/>
+        <field name="consignee_id" ref="demo_partner_consignee_gujarat"/>
+        <field name="eway_bill_number">EWB/2026/DEMO/001</field>
+        <field name="package_count">12</field>
+        <field name="gr_charges">1500.0</field>
+        <field name="invoice_number">INV/DEMO/001</field>
+        <field name="invoice_value">85000.0</field>
+        <field name="product_type">Pharma - General Cargo</field>
+        <field name="payment_terms">pay_basis</field>
+    </record>
+    <record id="demo_gr_1_line_1" model="psr.goods.receipt.line">
+        <field name="gr_id" ref="demo_gr_1"/>
+        <field name="product_id" ref="demo_product_carton_a"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="quantity">12</field>
+        <field name="rate">500.0</field>
+        <field name="length_cm">40</field>
+        <field name="width_cm">30</field>
+        <field name="height_cm">30</field>
+        <field name="actual_weight">180</field>
+    </record>
+
+    <!-- Sample Trip Sheet consolidating the GR -->
+    <record id="demo_trip_sheet_1" model="psr.trip.sheet">
+        <field name="vehicle_id" ref="demo_fleet_vehicle"/>
+        <field name="origin_location">Delhi</field>
+        <field name="destination_location">Rajkot, Gujarat</field>
+        <field name="odometer_start">45210</field>
+        <field name="odometer_end">45980</field>
+        <field name="fuel_quantity">85</field>
+        <field name="fuel_cost">7650</field>
+        <field name="gr_ids" eval="[(4, ref('demo_gr_1'))]"/>
+    </record>
+
+    <!-- Sample Delivery / Unloading Note -->
+    <record id="demo_delivery_note_1" model="psr.delivery.note">
+        <field name="gr_id" ref="demo_gr_1"/>
+        <field name="unloading_location">Rajkot Godown</field>
+        <field name="received_by">Warehouse Incharge - Saurashtra Traders</field>
+        <field name="fuel_charges">450.0</field>
+        <field name="local_delivery_charges">300.0</field>
+    </record>
+
+</odoo>
