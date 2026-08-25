@@ -19,11 +19,11 @@
     </record>
 
     <!-- Products -->
-    <record id="demo_product_carton_a" model="product.product">
-        <field name="name">General Cargo - Carton (Type A)</field>
-        <field name="detailed_type">consu</field>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-    </record>
+<!--    <record id="demo_product_carton_a" model="product.product">-->
+<!--        <field name="name">General Cargo - Carton (Type A)</field>-->
+<!--        <field name="detailed_type">consu</field>-->
+<!--        <field name="uom_id" ref="uom.product_uom_unit"/>-->
+<!--    </record>-->
     <record id="demo_product_spare_tyre" model="product.product">
         <field name="name">Truck Tyre - Spare Part</field>
         <field name="detailed_type">consu</field>
@@ -57,17 +57,17 @@
         <field name="product_type">Pharma - General Cargo</field>
         <field name="payment_terms">pay_basis</field>
     </record>
-    <record id="demo_gr_1_line_1" model="psr.goods.receipt.line">
-        <field name="gr_id" ref="demo_gr_1"/>
-        <field name="product_id" ref="demo_product_carton_a"/>
-        <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="quantity">12</field>
-        <field name="rate">500.0</field>
-        <field name="length_cm">40</field>
-        <field name="width_cm">30</field>
-        <field name="height_cm">30</field>
-        <field name="actual_weight">180</field>
-    </record>
+<!--    <record id="demo_gr_1_line_1" model="psr.goods.receipt.line">-->
+<!--        <field name="gr_id" ref="demo_gr_1"/>-->
+<!--        <field name="product_id" ref="demo_product_carton_a"/>-->
+<!--        <field name="uom_id" ref="uom.product_uom_unit"/>-->
+<!--        <field name="quantity">12</field>-->
+<!--        <field name="rate">500.0</field>-->
+<!--        <field name="length_cm">40</field>-->
+<!--        <field name="width_cm">30</field>-->
+<!--        <field name="height_cm">30</field>-->
+<!--        <field name="actual_weight">180</field>-->
+<!--    </record>-->
 
     <!-- Sample Trip Sheet consolidating the GR -->
     <record id="demo_trip_sheet_1" model="psr.trip.sheet">
