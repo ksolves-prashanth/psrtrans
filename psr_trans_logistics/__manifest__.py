@@ -33,7 +33,7 @@ Covers:
         'views/psr_menus.xml',
     ],
     'demo': [
-        'data/demo_data.xml',
+        # 'data/demo_data.xml',
     ],
     'installable': True,
     'application': True,
